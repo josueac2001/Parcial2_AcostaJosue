@@ -1,5 +1,6 @@
 ﻿@model ConcertDB.DAL.Entities.Tickets
 
+
 @{
     ViewData["Title"] = "Create";
 }
@@ -16,26 +17,25 @@
                 <label asp-for="Id" class="control-label"></label>
                 <input asp-for="Id" class="form-control" />
                 <span asp-validation-for="Id" class="text-danger"></span>
-            </div>
-            <div class="form-group form-check">
-                <label class="form-check-label">
-                    <input class="form-check-input" asp-for="IsUsed" /> @Html.DisplayNameFor(model => model.IsUsed)
-                </label>
+                <br />
             </div>
             <div class="form-group">
                 <label asp-for="EntranceGate" class="control-label"></label>
-                <input asp-for="EntranceGate" class="form-control" />
-                <span asp-validation-for="EntranceGate" class="text-danger"></span>
+                @Html.DropDownList("EntranceGate", new List<SelectListItem>{
+                    new SelectListItem{Text = "Norte", Value = "1"},
+                    new SelectListItem{Text = "Sur", Value = "2"},
+                    new SelectListItem{Text = "Oriental", Value = "3"},
+                    new SelectListItem{Text = "Occidental", Value = "4"},
+                })
+                
             </div>
             <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
+                <br />
+                <input type="submit" value="Validar" class="btn btn-primary" />
+                <a asp-action="Index" class="btn btn-outline-success">Regresar</a>
             </div>
         </form>
     </div>
-</div>
-
-<div>
-    <a asp-action="Index">Back to List</a>
 </div>
 
 @section Scripts {

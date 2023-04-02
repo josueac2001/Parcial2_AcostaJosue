@@ -27,6 +27,8 @@ namespace ConcertDB.Controllers
                           Problem("Entity set 'DatabaseContext.Tickets'  is null.");
         }
 
+       
+
         // GET: Tickets/Details/5
         public async Task<IActionResult> Details(Guid? id)
         {
@@ -60,7 +62,7 @@ namespace ConcertDB.Controllers
             {
                 try
                 {
-                    _context.Add(tickets);
+                    _context.Update(tickets);
                     await _context.SaveChangesAsync();
                     return RedirectToAction(nameof(Index));
 

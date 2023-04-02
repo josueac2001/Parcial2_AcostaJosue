@@ -14,7 +14,7 @@ namespace ConcertDB.DAL.Entities
         #endregion
 
         #region Methods
-        public List<string> EntranceGateOptions { get; } = new List<string>
+        public List<String> EntranceGateOptions { get; } = new List<String>
         {
             "Norte",
             "Sur",

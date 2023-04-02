@@ -13,7 +13,7 @@ builder.Services.AddDbContext<DatabaseContext>(o =>
 
 builder.Services.AddRazorPages().AddRazorRuntimeCompilation();
 
-builder.Services.AddScoped<SeederDb>();
+builder.Services.AddTransient<SeederDb>();
 
 var app = builder.Build();
 
