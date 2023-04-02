@@ -11,6 +11,7 @@ using Microsoft.Data.SqlClient;
 using System.Data.SqlClient;
 using System.Diagnostics.Metrics;
 using System.Net.Sockets;
+using Microsoft.AspNetCore.Authentication;
 
 namespace ConcertDB.Controllers
 {
@@ -73,9 +74,10 @@ namespace ConcertDB.Controllers
             }
             if (ModelState.IsValid)
             {
-                tickets.IsUsed = true;
-                tickets.UseDate = DateTime.Now;
-                _context.Update(tickets);
+                ticketId.IsUsed = true;
+                ticketId.UseDate = DateTime.Now;
+                ticketId.EntranceGate = tickets.EntranceGate;
+                _context.Update(ticketId);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
@@ -88,23 +90,5 @@ namespace ConcertDB.Controllers
         {
           return (_context.Tickets?.Any(e => e.Id == id)).GetValueOrDefault();
         }
-
-        //public async Task<String> ValidateTicket(Guid id)
-        //{
-        //   var  ticket = _context.Tickets.FirstOrDefault(e => e.Id == id);
-        //    if(ticket == null)
-        //    {
-        //        return"Ticket no valido";
-        //    }
-        //    else if (ticket.IsUsed)
-        //    {
-        //        return $"Este Ticket fue usada el {ticket.UseDate} por la porteria {ticket.EntranceGate}";
-        //    }
-        //    else
-        //    {
-        //        return "";
-        //    }
-        //}
-   
     }
 }
