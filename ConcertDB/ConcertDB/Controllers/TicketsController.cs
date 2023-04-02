@@ -7,6 +7,9 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using ConcertDB.DAL;
 using ConcertDB.DAL.Entities;
+using Microsoft.Data.SqlClient;
+using System.Data.SqlClient;
+using System.Diagnostics.Metrics;
 
 namespace ConcertDB.Controllers
 {
@@ -59,29 +62,12 @@ namespace ConcertDB.Controllers
         public async Task<IActionResult> Create(Tickets tickets)
         {
             if (ModelState.IsValid)
-            {
-                try
-                {
-                    _context.Update(tickets);
-                    await _context.SaveChangesAsync();
-                    return RedirectToAction(nameof(Index));
-
-                }
-                catch (DbUpdateException dbUpdateException)
-                {
-                    if (dbUpdateException.InnerException.Message.Contains("duplicate"))
-                    {
-                        ModelState.AddModelError(string.Empty, "Ya existe una categoría con el mismo nombre.");
-                    }
-                    else
-                    {
-                        ModelState.AddModelError(string.Empty, dbUpdateException.InnerException.Message);
-                    }
-                }
-                catch (Exception exception)
-                {
-                    ModelState.AddModelError(string.Empty, exception.Message);
-                }
+            {   
+                tickets.IsUsed = true;
+                tickets.UseDate = DateTime.Now;
+                _context.Update(tickets);
+                await _context.SaveChangesAsync();
+                return RedirectToAction(nameof(Index));
             }
             return View(tickets);
         }
@@ -139,5 +125,23 @@ namespace ConcertDB.Controllers
         {
           return (_context.Tickets?.Any(e => e.Id == id)).GetValueOrDefault();
         }
+
+        public ActionResult Validar(Guid id)
+        {
+            var ticket = _context.Tickets.FirstOrDefault(e => e.Id == id);
+            if(ticket == null)
+            {
+                return Content("Ticket no valido");
+            }
+            else if (ticket.IsUsed)
+            {
+                return Content($"Este Ticket fue usada el {ticket.UseDate} por la porteria {ticket.EntranceGate}");
+            }
+            else
+            {
+                return View(ticket);
+            }
+        }
+   
     }
 }
