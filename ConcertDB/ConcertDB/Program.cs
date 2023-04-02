@@ -1,7 +1,20 @@
+using ConcertDB.DAL;
+using ConcertDB.DAL;
+using Microsoft.EntityFrameworkCore;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+
+builder.Services.AddDbContext<DatabaseContext>(o =>
+{
+    o.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
+});
+
+//builder.Services.AddRazorPages().AddRazorRuntimeCompilation();
+
+//builder.Services.AddTransient<SeederDb>();
 
 var app = builder.Build();
 
