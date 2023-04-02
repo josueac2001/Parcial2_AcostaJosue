@@ -62,21 +62,17 @@ namespace ConcertDB.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Validate(Tickets tickets)
         {
+            var ticketId = _context.Tickets.FirstOrDefault(m => m.Id == tickets.Id);
+            if (ticketId == null)
+            {
+                ModelState.AddModelError(string.Empty, "Ticket no valido");
+            }
+            else if (ticketId.IsUsed)
+            {
+                ModelState.AddModelError(string.Empty, "Este Ticket  ya fue usado el " + ticketId.UseDate + " en la entrada " + ticketId.EntranceGate);
+            }
             if (ModelState.IsValid)
             {
-                //var c = _context.Find<Tickets>(tickets.Id);
-                //if (c == null)
-                //{
-                //    ModelState.AddModelError(string.Empty, "Ticket no valido"); 
-                //}
-                //else if (tickets.IsUsed)
-                //{
-                //    ModelState.AddModelError(string.Empty, $"Este Ticket fue usada el {tickets.UseDate} por la porteria {tickets.EntranceGate}");
-                //}
-                //else
-                //{
-                    
-                //}
                 tickets.IsUsed = true;
                 tickets.UseDate = DateTime.Now;
                 _context.Update(tickets);
@@ -93,22 +89,22 @@ namespace ConcertDB.Controllers
           return (_context.Tickets?.Any(e => e.Id == id)).GetValueOrDefault();
         }
 
-        public async Task<String> ValidateTicket(Guid id)
-        {
-           var  ticket = _context.Tickets.FirstOrDefault(e => e.Id == id);
-            if(ticket == null)
-            {
-                return"Ticket no valido";
-            }
-            else if (ticket.IsUsed)
-            {
-                return $"Este Ticket fue usada el {ticket.UseDate} por la porteria {ticket.EntranceGate}";
-            }
-            else
-            {
-                return "";
-            }
-        }
+        //public async Task<String> ValidateTicket(Guid id)
+        //{
+        //   var  ticket = _context.Tickets.FirstOrDefault(e => e.Id == id);
+        //    if(ticket == null)
+        //    {
+        //        return"Ticket no valido";
+        //    }
+        //    else if (ticket.IsUsed)
+        //    {
+        //        return $"Este Ticket fue usada el {ticket.UseDate} por la porteria {ticket.EntranceGate}";
+        //    }
+        //    else
+        //    {
+        //        return "";
+        //    }
+        //}
    
     }
 }
