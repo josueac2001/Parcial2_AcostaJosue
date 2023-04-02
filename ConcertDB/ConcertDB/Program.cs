@@ -1,5 +1,4 @@
 using ConcertDB.DAL;
-using ConcertDB.DAL;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -12,11 +11,23 @@ builder.Services.AddDbContext<DatabaseContext>(o =>
     o.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
 });
 
-//builder.Services.AddRazorPages().AddRazorRuntimeCompilation();
+builder.Services.AddRazorPages().AddRazorRuntimeCompilation();
 
-//builder.Services.AddTransient<SeederDb>();
+builder.Services.AddScoped<SeederDb>();
 
 var app = builder.Build();
+
+SeederData();
+void SeederData()
+{
+    IServiceScopeFactory? scopedFactory = app.Services.GetService<IServiceScopeFactory>();
+
+    using (IServiceScope? scope = scopedFactory.CreateScope())
+    {
+        SeederDb? service = scope.ServiceProvider.GetService<SeederDb>();
+        service.SeederAsync().Wait();
+    }
+}
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
