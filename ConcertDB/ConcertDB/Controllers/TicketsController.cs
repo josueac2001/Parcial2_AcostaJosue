@@ -50,19 +50,20 @@ namespace ConcertDB.Controllers
             return View(tickets);
         }
 
-        // GET: Tickets/Create
-        public IActionResult Create()
+        // GET: Tickets/Validate
+        public IActionResult Validate()
         {
             return View();
         }
 
-        // POST: Tickets/Create
+        // POST: Tickets/Validate
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(Tickets tickets)
+        public async Task<IActionResult> Validate(Tickets tickets)
         {
             if (ModelState.IsValid)
-            {   
+            {
+                ValidateTicket(tickets.Id);
                 tickets.IsUsed = true;
                 tickets.UseDate = DateTime.Now;
                 _context.Update(tickets);
@@ -126,7 +127,7 @@ namespace ConcertDB.Controllers
           return (_context.Tickets?.Any(e => e.Id == id)).GetValueOrDefault();
         }
 
-        public ActionResult Validar(Guid id)
+        public ActionResult ValidateTicket(Guid id)
         {
             var ticket = _context.Tickets.FirstOrDefault(e => e.Id == id);
             if(ticket == null)
